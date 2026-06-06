@@ -49,6 +49,7 @@ class PostController extends Controller
 
         return response()->json($post->load(['city', 'category']), 201);
     }
+
     public function show($id)
     {
         $post = Post::with(['comments.user', 'likes'])->findOrFail($id);
@@ -95,6 +96,28 @@ class PostController extends Controller
         $post->increment('comments_count');
 
         return response()->json($comment, 201);
+    }
+
+    // Add this new method to get comments
+    public function getComments($id)
+    {
+        try {
+            $post = Post::findOrFail($id);
+            $comments = Comment::where('post_id', $post->id)
+                ->with('user')
+                ->latest()
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $comments
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function update(Request $request, $id)
