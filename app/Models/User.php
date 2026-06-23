@@ -25,7 +25,7 @@ class User extends Authenticatable
         'role',
         'avatar',
         'cover_image',
-        'bio'
+        'bio',
     ];
 
     /**
