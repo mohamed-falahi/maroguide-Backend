@@ -6,7 +6,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FollowController;
-use App\Http\Controllers\UserController; // Add this
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
@@ -25,9 +25,9 @@ Route::get('/cities',             [CityController::class, 'index']);
 Route::get('/cities/{id}/posts',  [CityController::class, 'posts']);
 Route::get('/categories',         [CategoryController::class, 'index']);
 Route::get('/users/{id}/profile', [FollowController::class, 'profile']);
-Route::get('/users/{id}',          [UserController::class, 'show']); // Public user profile
-Route::get('/users/{id}/posts',    [UserController::class, 'getUserPosts']); // User's posts
-Route::get('/users/search',        [UserController::class, 'search']); // Search users
+Route::get('/users/{id}',          [UserController::class, 'show']);
+Route::get('/users/{id}/posts',    [UserController::class, 'getUserPosts']);
+Route::get('/users/search',        [UserController::class, 'search']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // User profile routes
@@ -54,11 +54,23 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/{id}/followers', [FollowController::class, 'followers']);
     Route::get('/users/{id}/following', [FollowController::class, 'following']);
 
-    // Admin routes
     Route::middleware('role:admin')->prefix('admin')->group(function () {
         Route::get('/stats',         [AdminController::class, 'stats']);
         Route::get('/users',         [AdminController::class, 'users']);
         Route::get('/posts',         [AdminController::class, 'posts']);
         Route::delete('/posts/{id}', [AdminController::class, 'deletePost']);
+
+        Route::delete('/users/{id}', [AdminController::class, 'deleteUser']);
+        // City management routes
+        Route::get('/cities',         [AdminController::class, 'cities']);
+        Route::post('/cities',        [AdminController::class, 'storeCity']);
+        Route::put('/cities/{id}',    [AdminController::class, 'updateCity']);
+        Route::delete('/cities/{id}', [AdminController::class, 'deleteCity']);
+
+        // Category management routes
+        Route::get('/categories',         [AdminController::class, 'categories']);
+        Route::post('/categories',        [AdminController::class, 'storeCategory']);
+        Route::put('/categories/{id}',    [AdminController::class, 'updateCategory']);
+        Route::delete('/categories/{id}', [AdminController::class, 'deleteCategory']);
     });
 });

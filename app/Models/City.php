@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class City extends Model
 {
-    protected $fillable = ['name', 'region'];
-
+    protected $fillable = ['name', 'region', 'image'];
     public function posts()
     {
         return $this->hasMany(Post::class);
